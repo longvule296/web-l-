@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#ffd6ea">
-  <title>Một điều ngọt ngào 💗</title>
+  <meta name="theme-color" content="#12030a">
+  <title>Một điều nhỏ dành cho bạn 💗</title>
 
   <!-- Font (có fallback hệ thống nếu offline) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,92 +13,81 @@
 
   <link rel="stylesheet" href="style.css">
 </head>
-<body class="is-loading">
+<body>
 
-  <!-- Gradient dùng chung cho trái tim lớn (SVG ẩn, không dùng display:none) -->
-  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
-    <defs>
-      <linearGradient id="bhg" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stop-color="#ffb3d6"/>
-        <stop offset=".55" stop-color="#ff6fa8"/>
-        <stop offset="1" stop-color="#c08bff"/>
-      </linearGradient>
-    </defs>
-  </svg>
-
-  <!-- Màn hình loading ngắn (tránh flash nội dung) -->
-  <div id="loader" aria-hidden="true">
-    <div class="loader-heart">💗</div>
-  </div>
-
-  <!-- Nền: gradient, các đốm sáng mềm, dải sáng chậm, noise -->
+  <!-- NỀN: gradient đỏ → đen → tím, đốm sáng mềm, vignette, noise -->
   <div class="bg" aria-hidden="true">
-    <div class="blob b1" data-depth="26"><i></i></div>
-    <div class="blob b2" data-depth="18"><i></i></div>
-    <div class="blob b3" data-depth="34"><i></i></div>
-    <div class="blob b4" data-depth="14"><i></i></div>
-    <div class="sweep"></div>
+    <div class="blob b1" data-depth="24"><i></i></div>
+    <div class="blob b2" data-depth="16"><i></i></div>
+    <div class="blob b3" data-depth="32"><i></i></div>
+    <div class="blob b4" data-depth="12"><i></i></div>
+    <div class="vignette"></div>
     <div class="noise"></div>
   </div>
 
-  <!-- Canvas nền: sao, bokeh, trái tim bay -->
-  <canvas id="bg-canvas" aria-hidden="true"></canvas>
-  <!-- Lớp sáng khi bấm nút -->
-  <div id="flash" aria-hidden="true"></div>
+  <!-- Canvas chính: ánh sáng, particle, trái tim lớn, heart burst -->
+  <canvas id="scene" aria-hidden="true"></canvas>
 
-  <main id="app">
-
-    <!-- ============ MÀN HÌNH NHẬP TÊN ============ -->
-    <section id="screen-intro" class="screen is-active">
-      <form id="name-form" class="intro-box glass" autocomplete="off" novalidate>
-        <h1 class="intro-title">✨ Một điều ngọt ngào đang chờ bạn ✨</h1>
-
+  <main>
+    <!-- ============ MÀN HÌNH ĐẦU ============ -->
+    <section id="intro" class="panel show">
+      <form id="intro-form" class="intro-card" autocomplete="off" novalidate>
+        <h1 class="intro-title">💗 Một điều nhỏ dành cho bạn...</h1>
         <div class="field" id="field">
           <label for="name-input" class="sr-only">Tên của bạn</label>
-          <input id="name-input" type="text" maxlength="24" placeholder="Nhập tên của bạn..."
+          <input id="name-input" type="text" maxlength="24" placeholder="Nhập tên của bạn"
                  autocomplete="off" autocapitalize="words" enterkeyhint="go" spellcheck="false">
         </div>
-
-        <p id="hint" class="hint" role="status" aria-live="polite">Ơ kìa, bạn chưa nhập tên nè 🥺 Cho mình biết tên bạn nhé~</p>
-
-        <button id="btn-start" type="submit" class="btn">💗 Bắt đầu</button>
+        <p id="hint" class="hint" role="status" aria-live="polite">Cho mình biết tên bạn nhé~ 🥺</p>
+        <button id="btn-open" type="submit" class="btn">✨ Mở ra</button>
       </form>
     </section>
 
-    <!-- ============ MÀN HÌNH CHÍNH ============ -->
-    <section id="screen-main" class="screen" aria-live="polite">
-      <div class="stage">
-
-        <!-- Lời chào xuất hiện từng chữ -->
-        <div class="hero" id="hero" data-depth="12">
-          <h2 class="hero-title" id="hero-title"></h2>
-          <p class="hero-sub" id="hero-sub">Hôm nay dành cho bạn một chút ngọt ngào...</p>
-        </div>
-
-        <!-- Card trung tâm -->
-        <div class="card-wrap" data-depth="10">
-          <div class="card-float">
-            <article class="card glass" id="card">
-              <span class="card-spark s1" aria-hidden="true">✦</span>
-              <span class="card-spark s2" aria-hidden="true">✧</span>
-              <span class="card-spark s3" aria-hidden="true">✦</span>
-              <div class="card-heart" aria-hidden="true">💗</div>
-              <h3 class="card-name" id="card-name"></h3>
-              <p class="card-msg" id="card-msg">Hãy để hôm nay trở nên thật dịu dàng nhé.</p>
-              <button id="btn-magic" type="button" class="btn">✨ Nhấn vào đây</button>
-            </article>
-          </div>
-        </div>
-
+    <!-- ============ LỜI CHÀO ============ -->
+    <section id="name-block" class="panel" aria-live="polite">
+      <div class="name-inner">
+        <h2 id="name-title" class="name-title"></h2>
+        <p class="name-sub">Có một điều nhỏ mình muốn gửi đến bạn...</p>
       </div>
+    </section>
+
+    <!-- ============ PHONG THƯ ============ -->
+    <section id="env-stage" class="panel">
+      <div class="env-wrap">
+        <div class="env-halo" aria-hidden="true"></div>
+        <div class="env-float">
+          <button id="envelope" class="envelope" type="button" aria-label="Mở phong thư">
+            <span class="env-back"></span>
+            <span class="env-glow"></span>
+            <span class="env-paper"><i></i><i></i><i></i><i></i><i></i></span>
+            <span class="env-front"><b class="l"></b><b class="r"></b><b class="b"></b></span>
+            <span class="env-flap"></span>
+            <span class="env-seal" aria-hidden="true">💗</span>
+          </button>
+        </div>
+        <p id="env-hint" class="env-hint">Chạm vào phong thư ✨</p>
+      </div>
+    </section>
+
+    <!-- ============ BỨC THƯ ============ -->
+    <section id="letter-wrap" class="panel">
+      <article id="letter" class="letter">
+        <h3 id="letter-greet" class="letter-greet"></h3>
+        <div id="letter-body" class="letter-body"></div>
+        <p id="letter-sign" class="letter-sign"></p>
+        <div id="letter-actions" class="letter-actions">
+          <button type="button" id="btn-more" class="mini-btn">💗 Thả thêm tim</button>
+          <button type="button" id="btn-again" class="mini-btn">↺ Xem lại</button>
+        </div>
+      </article>
     </section>
   </main>
 
-  <!-- Canvas hiệu ứng tương tác (burst, trail) nằm trên cùng -->
-  <canvas id="fx-canvas" aria-hidden="true"></canvas>
+  <!-- Canvas hiệu ứng tương tác (click, trail) nằm trên cùng -->
+  <canvas id="fx" aria-hidden="true"></canvas>
 
   <!-- Nút bật/tắt âm thanh (mặc định TẮT) -->
-  <button id="sound-toggle" class="sound-toggle glass" type="button" aria-pressed="false" aria-label="Bật âm thanh" title="Bật/tắt âm thanh">🔇</button>
+  <button id="sound-toggle" class="sound-toggle" type="button" aria-pressed="false" aria-label="Bật âm thanh" title="Bật/tắt âm thanh">🔇</button>
 
   <script src="script.js"></script>
 </body>
