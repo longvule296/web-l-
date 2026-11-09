@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ffd6ea">
+  <title>Một điều ngọt ngào 💗</title>
+
+  <!-- Font (có fallback hệ thống nếu offline) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="is-loading">
+
+  <!-- Gradient dùng chung cho trái tim lớn (SVG ẩn, không dùng display:none) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="bhg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#ffb3d6"/>
+        <stop offset=".55" stop-color="#ff6fa8"/>
+        <stop offset="1" stop-color="#c08bff"/>
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <!-- Màn hình loading ngắn (tránh flash nội dung) -->
+  <div id="loader" aria-hidden="true">
+    <div class="loader-heart">💗</div>
+  </div>
+
+  <!-- Nền: gradient, các đốm sáng mềm, dải sáng chậm, noise -->
+  <div class="bg" aria-hidden="true">
+    <div class="blob b1" data-depth="26"><i></i></div>
+    <div class="blob b2" data-depth="18"><i></i></div>
+    <div class="blob b3" data-depth="34"><i></i></div>
+    <div class="blob b4" data-depth="14"><i></i></div>
+    <div class="sweep"></div>
+    <div class="noise"></div>
+  </div>
+
+  <!-- Canvas nền: sao, bokeh, trái tim bay -->
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+  <!-- Lớp sáng khi bấm nút -->
+  <div id="flash" aria-hidden="true"></div>
+
+  <main id="app">
+
+    <!-- ============ MÀN HÌNH NHẬP TÊN ============ -->
+    <section id="screen-intro" class="screen is-active">
+      <form id="name-form" class="intro-box glass" autocomplete="off" novalidate>
+        <h1 class="intro-title">✨ Một điều ngọt ngào đang chờ bạn ✨</h1>
+
+        <div class="field" id="field">
+          <label for="name-input" class="sr-only">Tên của bạn</label>
+          <input id="name-input" type="text" maxlength="24" placeholder="Nhập tên của bạn..."
+                 autocomplete="off" autocapitalize="words" enterkeyhint="go" spellcheck="false">
+        </div>
+
+        <p id="hint" class="hint" role="status" aria-live="polite">Ơ kìa, bạn chưa nhập tên nè 🥺 Cho mình biết tên bạn nhé~</p>
+
+        <button id="btn-start" type="submit" class="btn">💗 Bắt đầu</button>
+      </form>
+    </section>
+
+    <!-- ============ MÀN HÌNH CHÍNH ============ -->
+    <section id="screen-main" class="screen" aria-live="polite">
+      <div class="stage">
+
+        <!-- Lời chào xuất hiện từng chữ -->
+        <div class="hero" id="hero" data-depth="12">
+          <h2 class="hero-title" id="hero-title"></h2>
+          <p class="hero-sub" id="hero-sub">Hôm nay dành cho bạn một chút ngọt ngào...</p>
+        </div>
+
+        <!-- Card trung tâm -->
+        <div class="card-wrap" data-depth="10">
+          <div class="card-float">
+            <article class="card glass" id="card">
+              <span class="card-spark s1" aria-hidden="true">✦</span>
+              <span class="card-spark s2" aria-hidden="true">✧</span>
+              <span class="card-spark s3" aria-hidden="true">✦</span>
+              <div class="card-heart" aria-hidden="true">💗</div>
+              <h3 class="card-name" id="card-name"></h3>
+              <p class="card-msg" id="card-msg">Hãy để hôm nay trở nên thật dịu dàng nhé.</p>
+              <button id="btn-magic" type="button" class="btn">✨ Nhấn vào đây</button>
+            </article>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Canvas hiệu ứng tương tác (burst, trail) nằm trên cùng -->
+  <canvas id="fx-canvas" aria-hidden="true"></canvas>
+
+  <!-- Nút bật/tắt âm thanh (mặc định TẮT) -->
+  <button id="sound-toggle" class="sound-toggle glass" type="button" aria-pressed="false" aria-label="Bật âm thanh" title="Bật/tắt âm thanh">🔇</button>
+
+  <script src="script.js"></script>
+</body>
+</html>
